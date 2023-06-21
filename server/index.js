@@ -113,6 +113,6 @@ io.on("connection", (socket, usuario) => {
 
   });
   
-  httpServer.listen(3002, ()=> {
-    console.log("HTTP Server Running on port 3002")
+  httpServer.listen(PORT, ()=> {
+    console.log(`SOCKET_IO Server Running on port ${PORT}`)
   });
