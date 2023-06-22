@@ -14,9 +14,6 @@ import postRoutes from "./routes/posts.js";
 import { register } from "./controllers/auth.js"
 import { createPost } from "./controllers/posts.js"
 import { verifyToken } from "./middleware/auth.js";
-import User from "./models/User.js";
-import Post from "./models/Post.js";
-import { users, posts } from "./data/index.js";
 import router from "./routes/chatMessages.js"
 import { createServer } from "http";
 import { Server } from "socket.io";
@@ -82,7 +79,7 @@ mongoose.connect(process.env.MONGO_URL, {
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: 'https://redsocial-frontend.onrender.com//*',
+    origin: 'https://redsocial-frontend.onrender.com/*',
     methods: ["GET", "POST"]
   }
 });
