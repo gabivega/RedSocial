@@ -79,7 +79,7 @@ mongoose.connect(process.env.MONGO_URL, {
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: 'https://redsocial-frontend.onrender.com/home',
+    origin: '*',
     methods: ["GET", "POST"]
   }
 });
