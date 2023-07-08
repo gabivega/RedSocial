@@ -32,7 +32,7 @@ import {
     // };
 
     const getCurrentUser = async () => {
-      const response = await fetch(`http://localhost:3001/users/currentuser/${currentUser}`, {
+      const response = await fetch(`https://redsocial-backend.onrender.com/users/currentuser/${currentUser}`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
