@@ -38,7 +38,7 @@ return (
     fontWeight="500"
     sx={{ mb:"1.5rem"}}
     >
-    Friend List
+    Friends
     </Typography>
     <Box display="flex" flexDirection="column" gap="1.5rem">
     {friends.map((friend) => 

@@ -12,7 +12,6 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
   const friends = useSelector((state) => state.user.friends);
-
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;
   const primaryDark = palette.primary.dark;
@@ -34,9 +33,6 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
     );
     const data = await response.json();
     dispatch(setFriends({ friends: data }));
-    const amigo = data.find(i => i._id === friendId)
-    {amigo ? (console.log("amigo agregado: " + amigo.firstName + " " + amigo.lastName)) : 
-    (console.log("amigo eliminado: " + amigo.firstName + " " + amigo.lastName))}
   };
 
   return (
@@ -45,8 +41,8 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
         <UserImage image={userPicturePath} size="55px" />
         <Box
           onClick={() => {
-            navigate(`/profile/${friendId}`);
-            navigate(0);
+            navigate(`/profile/${friendId}`, { replace: false });
+            //navigate(0);
           }}
         >
           <Typography

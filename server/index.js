@@ -14,7 +14,6 @@ import postRoutes from "./routes/posts.js";
 import { register } from "./controllers/auth.js"
 import { createPost } from "./controllers/posts.js"
 import { verifyToken } from "./middleware/auth.js";
-import router from "./routes/chatMessages.js"
 import { createServer } from "http";
 import { Server } from "socket.io";
 
@@ -49,12 +48,13 @@ const upload = multer({ storage});
 
 app.post("/auth/register", upload.single("picture"), register);
 app.post("/posts",verifyToken, upload.single("picture"), createPost);
+//app.post("/posts",verifyToken, createPost);
 
 // ===== ROUTES ===== 
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
-app.use("/chat", router);
+
 
 
 
@@ -63,15 +63,14 @@ const PORT = process.env.PORT || 6001;
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-})
-// .then(() => {
-//     app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+}).then(() => {
+    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 
-//     // ===== ADD DATA ONE TIME =====
-//    //User.insertMany(users);
-//    //Post.insertMany(posts);
+    // ===== ADD DATA ONE TIME =====
+   //User.insertMany(users);
+   //Post.insertMany(posts);
 
-// }).catch((error) => console.log(`${error} did not connect`));
+}).catch((error) => console.log(`${error} did not connect`));
 
 
 // SOCKET.IO CONFIGURATIONS
@@ -84,33 +83,41 @@ const io = new Server(httpServer, {
   }
 });
 
+const prevMessages = []
 
-io.on("connection", (socket, usuario) => {
-    console.log(`se ha conectado el cliente ${socket.id} con nombre ${usuario}`)
+io.on("connection", (socket) => {
+    console.log(`se ha conectado el cliente ${socket.id}` )
     let usersConnected = io.engine.clientsCount
     console.log("usuarios conectados( on connection) " + usersConnected)
     io.emit("usersConnected", usersConnected)
+    socket.emit("getPrevMessages", prevMessages)
     // socket.on("joinChat", (usuario)=>{
-      
+
     //     console.log(`${usuario} se conecto a la sala`)
-      
+
     // })
     socket.on("disconnect", (socket) => {
+        let usersConnected = io.engine.clientsCount
         console.log(`se ha desconectado el cliente ${socket.id}`)
         io.emit("usersConnected", usersConnected)
+        
         console.log("hay " + usersConnected + " usuarios conectados")
     } )
-
+    socket.emit("getPrevMessages", (prevMessages))
     socket.on('chatMessage', (message) => {
         console.log(message)
         io.emit("broadcastMessages", (message))
-        console.log("hay " + usersConnected + " usuarios conectados")
+        prevMessages.push(message)
+        console.log(prevMessages)
+        if(prevMessages.length >= 10) {
+          prevMessages.shift()
+        }
     })
 
-  
+
 
   });
-  
+
   httpServer.listen(PORT, ()=> {
     console.log(`SOCKET_IO Server Running on port ${PORT}`)
   });

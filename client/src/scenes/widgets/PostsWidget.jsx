@@ -8,7 +8,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
 
-  const feedPosts = [...posts].reverse()
+ const feedPosts = [...posts].reverse()
 
 
   const getPosts = async () => {

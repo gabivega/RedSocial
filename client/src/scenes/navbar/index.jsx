@@ -16,6 +16,7 @@ import {
   DarkMode,
   LightMode,
   Notifications,
+  AccountBalanceWalletOutlined,
   Help,
   Menu,
   Close,
@@ -30,8 +31,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
- 
+  const isNonMobileScreens = useMediaQuery("(min-width: 800px)");
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
   const dark = theme.palette.neutral.dark;
@@ -57,7 +57,7 @@ const Navbar = () => {
             },
           }}
         >
-          Emprenet
+          SocialNet
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
@@ -75,18 +75,19 @@ const Navbar = () => {
       </FlexBetween>
 
       {/* DESKTOP NAV */}
+      {}
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
           <IconButton onClick={() => dispatch(setMode())}>
-            {theme.palette.mode === "light" ? (
-              <DarkMode sx={{ fontSize: "25px" }} />
+            {theme.palette.mode === "dark" ? (
+             <LightMode sx={{ color: dark, fontSize: "25px" }}/>
             ) : (
-              <LightMode sx={{ color: dark, fontSize: "25px" }} />
+               <DarkMode sx={{ fontSize: "25px" }} />
             )}
           </IconButton>
           <Message sx={ { fontSize: "25px" }} />
           <Notifications sx={{ fontSize: "25px" }} />
-          <Help sx={{ fontSize: "25px" }} />
+          <AccountBalanceWalletOutlined sx={{ fontSize: "25px" }} />
           <FormControl variant="standard" value={fullName}>
             <Select
               value={fullName}
@@ -161,7 +162,7 @@ const Navbar = () => {
             </IconButton>
             <Message sx={{ fontSize: "25px" }} />
             <Notifications sx={{ fontSize: "25px" }} />
-            <Help sx={{ fontSize: "25px" }} />
+            <AccountBalanceWalletOutlined sx={{ fontSize: "25px" }} />
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}

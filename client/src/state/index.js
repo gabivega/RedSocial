@@ -5,7 +5,6 @@ const initialState = {
   user: null,
   token: null,
   posts: [],
-  chatMsg: ""
 };
 
 export const authSlice = createSlice({
@@ -39,15 +38,11 @@ export const authSlice = createSlice({
         return post;
       });
       state.posts = updatedPosts;
-    },
-    setChatMsg: (state, action) => {
-      state.chatMsg = action.payload.message ;
-      console.log(state.chatMsg)
     }
     
   },
 });
 
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, setChatMsg } =
+export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost } =
   authSlice.actions;
 export default authSlice.reducer;
