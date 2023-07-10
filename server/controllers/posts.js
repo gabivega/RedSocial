@@ -6,6 +6,7 @@ import cloudinary from "../cloudinary/cloudinary.js";
 export const createPost = async (req, res) => {
   try {
     const { userId, description, image } = req.body;
+    console.log(req.body);
     const CloudinaryResponse = await cloudinary.uploader.upload(image)
     console.log(CloudinaryResponse)
     const user = await User.findById(userId);
