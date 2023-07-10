@@ -8,7 +8,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
 
- const feedPosts = [...posts].reverse()
+ //const feedPosts = [...posts].reverse()
 
 
   const getPosts = async () => {
@@ -44,7 +44,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 
   return (
     <>
-      {Array.from(feedPosts).map(
+      {Array.from(posts).map(
         ({
           _id,
           userId,
