@@ -3,30 +3,53 @@ import User from "../models/User.js";
 import cloudinary from "../cloudinary/cloudinary.js";
 
 /* CREATE */
-export const createPost = async (req, res) => {
-  try {
-    const { userId, description, image } = req.body;
-    console.log(req.body);
-    const CloudinaryResponse = await cloudinary.uploader.upload(image)
-    console.log(CloudinaryResponse)
-    const user = await User.findById(userId);
-    const newPost = new Post({
-      userId,
+// Upload to cloudinary
+async function cloudinaryUpload(file) {
+  const cloudinaryResponse = await cloudinary.uploader.upload(file)
+  const pictureUrl = await cloudinaryResponse.secure_url
+  return pictureUrl
+}
+// save postdata into mongodb
+async function savePost(data) {
+  const user = await User.findById(data.userId);
+    const newPost = new Post ({
+      userId: data.userId,
       firstName: user.firstName,
       lastName: user.lastName,
       location: user.location,
-      description,
+      description: data.description,
       userPicturePath: user.picturePath,
-      picturePath: CloudinaryResponse.secure_url,
+      picturePath: data.picturePath,
       likes: {},
       comments: [],
     });
     await newPost.save();
-    const post = await Post.find();
-    console.log(post);
-    res.status(201).json(post);
+    const posts = await getPosts()
+    return posts
+}
+// get updated posts
+async function getPosts() {
+  const post = await Post.find();
+  return post
+}
+
+export const createPost = async (req, res) => {
+  try {
+    const { userId, description, image } = req.body;
+    console.log(Object.keys(req.body));
+    let picturePath = "";
+    
+      picturePath = await cloudinaryUpload(image)
+      const postData = {
+        userId,
+        description,
+        picturePath
+      }
+      const posts = await savePost(postData)
+      res.status(201).json(posts);
+    
   } catch (err) {
-    res.status(409).json({ message: err.message });
+   res.status(409).json({ message: err.message });
   }
 };
 
@@ -34,7 +57,7 @@ export const createPost = async (req, res) => {
 export const getFeedPosts = async (req, res) => {
   try {
     const post = await Post.find();
-    console.log(post);
+    console.log();
     res.status(200).json(post);
   } catch (err) {
     res.status(404).json({ message: err.message });
