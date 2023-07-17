@@ -45,7 +45,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 
   return (
     <>
-      {Array.from(feedPosts).map(
+      {feedPosts.map(
         ({
           _id,
           userId,
