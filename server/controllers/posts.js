@@ -11,6 +11,7 @@ async function cloudinaryUpload(file) {
 }
 // save postdata into mongodb
 async function savePost(data) {
+  console.log("from savePost", data);
   const user = await User.findById(data.userId);
     const newPost = new Post ({
       userId: data.userId,
@@ -37,6 +38,7 @@ export const createPost = async (req, res) => {
   try {
     const { userId, description, image } = req.body;
     console.log(Object.keys(req.body));
+    console.log(req.body);
     let picturePath;
     image? picturePath = await cloudinaryUpload(image) : picturePath = ""
       
