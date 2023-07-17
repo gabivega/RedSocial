@@ -67,14 +67,14 @@ mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
-.then(() => {
-    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+// .then(() => {
+//     app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
 
-    // ===== ADD DATA ONE TIME =====
-   //User.insertMany(users);
-   //Post.insertMany(posts);
+//     // ===== ADD DATA ONE TIME =====
+//    //User.insertMany(users);
+//    //Post.insertMany(posts);
 
-}).catch((error) => console.log(`${error} did not connect`));
+// }).catch((error) => console.log(`${error} did not connect`));
 
 
 // SOCKET.IO CONFIGURATIONS
@@ -122,6 +122,6 @@ io.on("connection", (socket) => {
 
   });
 
-  // httpServer.listen(PORT, ()=> {
-  //   console.log(`SOCKET_IO Server Running on port ${PORT}`)
-  // });
+  httpServer.listen(PORT, ()=> {
+    console.log(`SOCKET_IO Server Running on port ${PORT}`)
+  });
