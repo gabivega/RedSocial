@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   mode: "dark",
-  user: null,
+  user: "noAuthUser",
   token: null,
   posts: [],
   chatMsg: ""
@@ -40,10 +40,10 @@ export const authSlice = createSlice({
       });
       state.posts = updatedPosts;
     },
-    setChatMsg: (state, action) => {
-      state.chatMsg = action.payload.message ;
-      console.log(state.chatMsg)
-    }
+    // setChatMsg: (state, action) => {
+    //   state.chatMsg = action.payload.message ;
+    //   console.log(state.chatMsg)
+    // }
     
   },
 });

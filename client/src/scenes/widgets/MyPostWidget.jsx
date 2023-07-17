@@ -1,11 +1,7 @@
 import {
     EditOutlined,
     DeleteOutlined,
-    AttachFileOutlined,
-    GifBoxOutlined,
     ImageOutlined,
-    MicOutlined,
-    MoreHorizOutlined,
   } from "@mui/icons-material";
   import {
     Box,
@@ -21,7 +17,7 @@ import {
   import Dropzone from "react-dropzone";
   import UserImage from "components/UserImage";
   import WidgetWrapper from "components/WidgetWrapper";
-  import { useState } from "react";
+  import { useState, useCallback, useEffect } from "react";
   import { useDispatch, useSelector } from "react-redux";
   import { setPosts } from "state";
   
@@ -29,6 +25,7 @@ import {
     const dispatch = useDispatch();
     const [isImage, setIsImage] = useState(false);
     const [image, setImage] = useState(null);
+    const [imageName, setImageName] = useState("")
     const [post, setPost] = useState("");
     const { palette } = useTheme();
     const { _id } = useSelector((state) => state.user);
@@ -42,21 +39,32 @@ import {
       formData.append("userId", _id);
       formData.append("description", post);
       if (image) {
-        formData.append("picture", image);
-        formData.append("picturePath", image.name);
+        formData.append("image", image);        
       }
   
-      const response = await fetch(`https://redsocial-backend.onrender.com/posts`, {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/posts`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
+
       const posts = await response.json();
       dispatch(setPosts({ posts }));
-      setImage(null);
+      setImage(null)
+      setIsImage(null);
       setPost("");
     };
-  
+    
+    const onDrop = useCallback((acceptedFiles) => {
+      setImageName(acceptedFiles[0].name)
+      const reader = new FileReader()
+      reader.onload = () =>{   
+      setImage(reader.result)
+      }
+      reader.readAsDataURL(acceptedFiles[0])
+      
+    }, [])
+    
     return (
       <WidgetWrapper>
         <FlexBetween gap="1.5rem">
@@ -81,29 +89,30 @@ import {
             p="1rem"
           >
             <Dropzone
-              acceptedFiles=".jpg,.jpeg,.png"
-              multiple={false}
-              onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
-            >
-              {({ getRootProps, getInputProps }) => (
-                <FlexBetween>
+            onDrop={onDrop}>
+              {({getRootProps, getInputProps}) => (
+                <Box            
+                >
+                  <input {...getInputProps()} />
+                  <FlexBetween>
                   <Box
                     {...getRootProps()}
                     border={`2px dashed ${palette.primary.main}`}
                     p="1rem"
                     width="100%"
                     sx={{ "&:hover": { cursor: "pointer" } }}
-                  >
-                    <input {...getInputProps()} />
+                  >                 
                     {!image ? (
                       <p>Add Image Here</p>
                     ) : (
-                      <FlexBetween>
-                        <Typography>{image.name}</Typography>
+                      <FlexBetween 
+                        margin= "0">
+                        <Typography>{imageName}</Typography>
                         <EditOutlined />
                       </FlexBetween>
                     )}
                   </Box>
+                  </FlexBetween>
                   {image && (
                     <IconButton
                       onClick={() => setImage(null)}
@@ -112,9 +121,10 @@ import {
                       <DeleteOutlined />
                     </IconButton>
                   )}
-                </FlexBetween>
+                
+                </Box>
               )}
-            </Dropzone>
+            </Dropzone>            
           </Box>
         )}
   
@@ -131,7 +141,7 @@ import {
             </Typography>
           </FlexBetween>
   
-          {isNonMobileScreens ? (
+          {/* {isNonMobileScreens ? (
             <>
               <FlexBetween gap="0.25rem">
                 <GifBoxOutlined sx={{ color: mediumMain }} />
@@ -152,7 +162,7 @@ import {
             <FlexBetween gap="0.25rem">
               <MoreHorizOutlined sx={{ color: mediumMain }} />
             </FlexBetween>
-          )}
+          )} */}
   
           <Button
             disabled={!post}

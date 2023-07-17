@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState} from "react";
 import  {
     Box,
     Button,
@@ -15,6 +15,8 @@ import { useDispatch } from "react-redux";
 import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
+
+// const baseUrl = process.env.REACT_APP_BASE_URL
 
 const registerSchema = yup.object().shape({
     firstName: yup.string().required("required"),
@@ -42,8 +44,8 @@ const initialValuesRegister = {
 }
 
 const initialValuesLogin = {
-    email: "",
-    password: ""
+    email: "test@test.com",
+    password: "test"
 }
 
 const Form = () => {
@@ -56,18 +58,18 @@ const Form = () => {
     const isRegister = pageType === "register";
 
     const register = async (values, onSubmitProps) => {
-      //Permite enviar la info del Formulario con la Imagen
+
       const formData = new FormData();
       for (let value in values) {
         formData.append(value, values[value]);
       }
-      formData.append('picturePath', values.picture.name);
+      image && formData.append('picturePath', image);
 
       const savedUserResponse = await fetch(
-        "https://redsocial-backend.onrender.com/auth/register",
+        `${process.env.REACT_APP_BASE_URL}/auth/register`,
         {
-          method: "POST",
-          body: formData,
+          method: "POST",          
+          body: formData
         }
       );
       const savedUser = await savedUserResponse.json();
@@ -80,7 +82,7 @@ const Form = () => {
 
     const login = async (values, onSubmitProps) => {
       const loggedInResponse = await fetch(
-        "https://redsocial-backend.onrender.com/auth/login",
+        `${process.env.REACT_APP_BASE_URL}/auth/login`,
         {
           method: "POST",
           headers: {"Content-Type": "application/json"},
@@ -105,6 +107,26 @@ const Form = () => {
       if (isRegister) await register(values, onSubmitProps);
     };
 
+    const [image, setImage] = useState("")
+    const [imageName, setImageName] = useState(null)
+
+    const cloudinaryUpload = async (file)=>{
+      console.log(file);
+      let formData = new FormData();
+      formData.append("file", file)
+      formData.append("upload_preset","jmxyjty3")
+      formData.append("cloud_name","emprenet")
+      for(let obj of formData) {
+        console.log(obj);
+      }
+      const cloudinaryUpload = await fetch ("https://api.cloudinary.com/v1_1/emprenet/image/upload",
+      {method: "POST",
+      body:formData})
+      const cloudinaryResponse = await cloudinaryUpload.json()
+      console.log(cloudinaryResponse)
+      console.log(cloudinaryResponse.secure_url)
+      setImage(cloudinaryResponse.secure_url)
+    }
     return (
         <Formik 
         onSubmit={handleFormSubmit}
@@ -122,20 +144,23 @@ const Form = () => {
                 resetForm,
             }) => (
                 <form onSubmit={handleSubmit}>
-                <Box 
+                  {isLogin && <Typography fontWeight="300" variant="h6" sx={{mb:"1rem"}}>
+                    Test Account email:
+                    test@test.com / password: test
+                  </Typography>}
+                  <Box 
                     display="grid"
                     gap="30px"
                     gridTemplateColumns="repeat(2, minmax(0,1fr))"
                     sx={{"& > div": { gridColumn : isNonMobile ?  undefined :"span 4"}}}
-                >  
-
-              {isRegister && (
-                <>
+                  >  
+                  {isRegister && (
+                  <>
                     <TextField
                     label= "First Name"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.firstName}
+                    value={values.firstName || ""}
                     name="firstName"
                     error={Boolean(touched.firstName) && Boolean(errors.firstName)}
                     helperText={touched.firstName && errors.firstName}
@@ -145,7 +170,7 @@ const Form = () => {
                     label= "Last Name"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.lastName}
+                    value={values.lastName  || ""}
                     name="lastName"
                     error={Boolean(touched.lastName) && Boolean(errors.lastName)}
                     helperText={touched.lastName && errors.lastName}
@@ -155,7 +180,7 @@ const Form = () => {
                     label= "Location Name"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.location}
+                    value={values.location  || ""}
                     name="location"
                     error={Boolean(touched.location) && Boolean(errors.location)}
                     helperText={touched.location && errors.location}
@@ -165,43 +190,45 @@ const Form = () => {
                     label= "Occupation"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.occupation}
+                    value={values.occupation  || ""}
                     name="occupation"
                     error={Boolean(touched.occupation) && Boolean(errors.occupation)}
                     helperText={touched.occupation && errors.location}
                     sx={{ gridColumn: "span 4"}}
                     />
                     <Box
-                    gridColumns="span 4"
+                    gridColumn="span 4"
                     border={`1px solid ${palette.neutral.medium}`}
-                    borderRadious="5px"
+                    borderRadius="5px"
                     p="1rem"
                     >
-                        <Dropzone
+                      <Dropzone
                         acceptedFiles=".jpg, .jpeg, .png"
                         multiple={false}
-                        onDrop={(acceptedFiles)=>
-                        setFieldValue("picture", acceptedFiles[0])}
+                        onDrop={(acceptedFiles)=> {  
+                        setImageName(acceptedFiles[0].name)                  
+                        setImage(acceptedFiles[0])
+                        cloudinaryUpload(acceptedFiles[0])                      
+                        }
+                        }
                         >
-                            {({ getRootProps, getInputProps}) => (
-                                <Box
-                                {...getRootProps()}
-                                border={`2px dashed ${palette.primary.main}`}
-                                p="1rem"
-                                sx={{ "&:hover": { cursor: "pointer"} }}
-                                >
-                                    <input { ...getInputProps()}/>
-                                    {!values.picture ? (
-                                        <p>Add Picture Here</p>
-                                    ): (
-                                        <FlexBetween>
-                                            <Typography>{values.picture.name}</Typography>
-                                        
-                                        </FlexBetween>
-                                    )}
-                                </Box>
-                            )}
-                        </Dropzone>
+                          {({ getRootProps, getInputProps}) => (
+                            <Box
+                              {...getRootProps()}
+                              border={`2px dashed ${palette.primary.main}`}
+                              p="1rem"
+                              sx={{ "&:hover": { cursor: "pointer"} }}
+                              >
+                              <input { ...getInputProps()}/>
+                                {!image ? (
+                                  <p>Add Picture Here</p> ) : (
+                                    <FlexBetween>
+                                      <Typography>{imageName}</Typography>
+                                    </FlexBetween>)
+                                }
+                            </Box>)
+                            }
+                      </Dropzone>
                     </Box>
                 </>
               )}
@@ -210,7 +237,7 @@ const Form = () => {
                 label= "Email"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.email}
+                value={values.email  || ""}
                 name="email"
                 error={Boolean(touched.email) && Boolean(errors.email)}
                 helperText={touched.email && errors.email}  
@@ -221,7 +248,7 @@ const Form = () => {
                 type="password"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.password}
+                value={values.password  || ""}
                 name="password"
                 error={Boolean(touched.password) && Boolean(errors.password)}
                 helperText={touched.password && errors.password}  
@@ -246,6 +273,8 @@ const Form = () => {
               <Typography 
               onClick= {()=> {
                 setPageType(isLogin ? "register" : "login");
+                initialValuesLogin.email = ""
+                initialValuesLogin.password = ""
                 resetForm();
               }}
               sx={{
@@ -261,17 +290,11 @@ const Form = () => {
                 "Already have an account? Login Here." }
               </Typography>
             </Box>
-
-
                 </ form>
             )
             }
-
-
-        </ Formik>
+      </ Formik>
     )
-
-
 }
 
 export default Form;

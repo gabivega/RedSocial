@@ -20,18 +20,30 @@ import {
     const dark = palette.neutral.dark;
     const medium = palette.neutral.medium;
     const main = palette.neutral.main;
-  
+  //  const currentUser = useSelector((state) => state.user._id)
+
     const getUser = async () => {
-      const response = await fetch(`https://redsocial-backend.onrender.com/users/${userId}`, {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/users/${userId}`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
       setUser(data);
     };
+
+    // const getCurrentUser = async () => {
+    //   const response = await fetch(`http://localhost:3001/users/currentuser/${currentUser}`, {
+    //     method: "GET",
+    //     headers: { Authorization: `Bearer ${token}` },
+    //   });
+    //   const data = await response.json();
+    //   setUser(data);
+    // };
   
+    
     useEffect(() => {
       getUser();
+     
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
   
     if (!user) {
@@ -97,22 +109,29 @@ import {
         {/* THIRD ROW */}
         <Box p="1rem 0">
           <FlexBetween mb="0.5rem">
-            <Typography color={medium}>Who's viewed your profile</Typography>
-            <Typography color={main} fontWeight="500">
-              {viewedProfile}
-            </Typography>
+            <Box
+            display="flex"
+            flexDirection="row"
+            >
+              <Typography 
+                sx={{mr: "5px"}}
+                color={medium}>Profile Visits: </Typography>
+              <Typography color={main} fontWeight="500">
+                {viewedProfile}
+              </Typography></Box>
+            
           </FlexBetween>
-          <FlexBetween>
+          {/* <FlexBetween>
             <Typography color={medium}>Impressions of your post</Typography>
             <Typography color={main} fontWeight="500">
               {impressions}
             </Typography>
-          </FlexBetween>
+          </FlexBetween> */}
         </Box>
-  
+   {/*
         <Divider />
   
-        {/* FOURTH ROW */}
+        FOURTH ROW 
         <Box p="1rem 0">
           <Typography fontSize="1rem" color={main} fontWeight="500" mb="1rem">
             Social Profiles
@@ -143,7 +162,7 @@ import {
             </FlexBetween>
             <EditOutlined sx={{ color: main }} />
           </FlexBetween>
-        </Box>
+        </Box>*/}
       </WidgetWrapper>
     );
   };

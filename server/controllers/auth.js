@@ -14,11 +14,19 @@ export const register = async (req, res) => {
             friends,
             location,
             occupation
-        } = req.body;
+        } = req.body;      
+        console.log(req.body);
 
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
+    //    let CloudinaryResponse = await cloudinary.uploader.upload(picture)
+       // console.log(CloudinaryResponse)
+       
+     //  const pictureUrl= await CloudinaryResponse.secure_url
+     //   console.log(pictureUrl);
+        
 
+        const viewedProfile = 0
         const newUser = new User({
             firstName,
             lastName,
@@ -28,8 +36,9 @@ export const register = async (req, res) => {
             friends,
             location,
             occupation,
-            viewedProfile : Math.floor(Math.random() * 10000),
-            impressions : Math.floor(Math.random() * 10000)
+            viewedProfile,
+            //viewedProfile : Math.floor(Math.random() * 10000),
+            //impressions : Math.floor(Math.random() * 10000)
         });
         const savedUser = await newUser.save();
         res.status(201).json(savedUser);

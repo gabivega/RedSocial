@@ -3,6 +3,7 @@ import {
     FavoriteBorderOutlined,
     FavoriteOutlined,
     ShareOutlined,
+    DeleteOutlined
   } from "@mui/icons-material";
   import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
   import FlexBetween from "components/FlexBetween";
@@ -10,7 +11,7 @@ import {
   import WidgetWrapper from "components/WidgetWrapper";
   import { useState } from "react";
   import { useDispatch, useSelector } from "react-redux";
-  import { setPost } from "state";
+  import { setPost,setPosts} from "state";
   
   const PostWidget = ({
     postId,
@@ -35,7 +36,7 @@ import {
     const primary = palette.primary.main;
   
     const patchLike = async () => {
-      const response = await fetch(`https://redsocial-backend.onrender.com/posts/${postId}/like`, {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/posts/${postId}/like`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -46,6 +47,18 @@ import {
       const updatedPost = await response.json();
       dispatch(setPost({ post: updatedPost }));
     };
+
+    const deletePost = async () => {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/posts/${postId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json()
+      dispatch(setPosts({ posts: data.post }));
+    }
   
     return (
       <WidgetWrapper m="2rem 0">
@@ -64,7 +77,7 @@ import {
             height="auto"
             alt="post"
             style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-            src={`https://redsocial-backend.onrender.com/assets/${picturePath}`}
+            src={picturePath}
           />
         )}
         <FlexBetween mt="0.25rem">
@@ -87,10 +100,16 @@ import {
               <Typography>{comments.length}</Typography>
             </FlexBetween>
           </FlexBetween>
-  
-          <IconButton>
-            <ShareOutlined />
-          </IconButton>
+              <Box>
+                <IconButton>
+                  <ShareOutlined />
+                </IconButton>
+                {loggedInUserId === postUserId ? <IconButton onClick={deletePost}>
+                  <DeleteOutlined />
+                </IconButton> : null}
+                
+              </Box>
+          
         </FlexBetween>
         {isComments && (
           <Box mt="0.5rem">

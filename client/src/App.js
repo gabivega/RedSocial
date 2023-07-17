@@ -13,7 +13,7 @@ import { themeSettings } from "./theme";
   const mode = useSelector((state) => state.mode);
   const theme = useMemo (() => createTheme(themeSettings(mode)),[mode]);
   const isAuth = Boolean(useSelector((state) => state.token));
-
+    console.log(process.env.REACT_APP_BASE_URL);
 
   return (
     <div className="app">

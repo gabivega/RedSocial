@@ -14,7 +14,7 @@ const LoginPage = () => {
           fontSize="32px"
           color="primary"
         >
-          Red Social
+          SocialNet
         </Typography>
         </Box>
 <Box width={isNonMobileScreens ? "50%" : "93%"} 
@@ -24,8 +24,9 @@ borderRadius="1.5rem"
 backgroundColor={theme.palette.background.alt}
 >
 <Typography fontWeight="500" variant="h5" sx={{mb:"1.5rem"}}>
-    Bienvenidos a la red social para emprendedores
+    Welcome to SocialNet
 </Typography>
+
 <Form />
 </Box>
 

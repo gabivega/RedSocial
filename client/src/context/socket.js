@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 import React from 'react';
-const URL = ('https://redsocial-backend.onrender.com/')
+const URL = ('http://localhost:3002')
 export const socket = io.connect(URL, {
     autoConnect : false
 }

@@ -13,7 +13,7 @@ const FriendListWidget = ({ userId }) => {
 
     const getFriends = async()=> {
         const response = await fetch (
-    `https://redsocial-backend.onrender.com/users/${userId}/friends`,
+    `${process.env.REACT_APP_BASE_URL}/users/${userId}/friends`,
     {
         method: "GET",
         headers: { Authorization : `Bearer ${token}`}
@@ -38,13 +38,13 @@ return (
     fontWeight="500"
     sx={{ mb:"1.5rem"}}
     >
-    Friend List
+    Friends
     </Typography>
     <Box display="flex" flexDirection="column" gap="1.5rem">
-    {friends.map((friend) => 
+    {friends.map((friend, i) => 
        ( 
        <Friend 
-        key={friend._id}
+        key={i}
         friendId={friend._id}
         name={`${friend.firstName} ${friend.lastName}`}
         subtitle={friend.occupation}

@@ -17,11 +17,12 @@ const ProfilePage = () => {
     const isNonMobileScreens = useMediaQuery("min-width:1000px");
 
     const getUser = async() => {
-        const response = await fetch(`https://redsocial-backend.onrender.com/users/${userId}`, {
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/users/${userId}`, {
             method: "GET",
             headers: { Authorization : `Bearer ${token}`}
         })
         const data = await response.json();
+        console.log(data)
         setUser(data);
     }
         useEffect(() => {
@@ -41,17 +42,16 @@ const ProfilePage = () => {
             justifyContent="left"
         >         
         <Box flexBasis="26%" >
-            <UserWidget userId={userId} picturePath={user.picturePath} />
-            <Box m="2rem 0" />
-            <FriendListWidget userId={userId} />
+            <UserWidget userId={userId} picturePath={user.picturePath}
+            sx={{mb:"10px"}} />
+            
+         {/* <FriendListWidget userId={userId} /> */}
+            
         </Box>
-        <Box 
-            flexBasis="42%"
-            mt="2rem"
-        >
-            <MyPostWidget picturePath={user.picturePath} />
-            <Box m="2rem 0" />
-            <PostsWidget userId={userId} isProfile />
+        <Box flexBasis="42%">
+            {/* <MyPostWidget picturePath={user.picturePath} /> */}
+            <Box />
+                <PostsWidget userId={userId} isProfile />
             </Box>
         </Box>
     </Box>
