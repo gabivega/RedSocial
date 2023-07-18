@@ -36,22 +36,18 @@ import {
     const medium = palette.neutral.medium;
   
     const cloudinaryUpload = async (file)=>{
-      console.log(file);
       let formData = new FormData();
       formData.append("file", file)
       formData.append("upload_preset","jmxyjty3")
       formData.append("cloud_name","emprenet")
-      for(let obj of formData) {
-        console.log(obj);
-      }
+      // for(let obj of formData) {
+      //   console.log(obj);
+      // }
       const cloudinaryUpload = await fetch ("https://api.cloudinary.com/v1_1/emprenet/image/upload",
       {method: "POST",
       body:formData})
       const cloudinaryResponse = await cloudinaryUpload.json()
-      console.log(cloudinaryResponse)
-      console.log(cloudinaryResponse.secure_url)
       setPictureUrl(cloudinaryResponse.secure_url)
-      console.log(pictureUrl);
     }
 
 
@@ -60,8 +56,7 @@ import {
       const formData = new FormData();
       formData.append("userId", _id);
       formData.append("description", post);
-      if (pictureUrl) {
-        console.log("desde handle post", pictureUrl);
+      if (pictureUrl) {        
         formData.append("image", pictureUrl);        
       }
   
