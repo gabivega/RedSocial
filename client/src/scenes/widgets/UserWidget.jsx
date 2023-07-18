@@ -20,8 +20,7 @@ import {
     const dark = palette.neutral.dark;
     const medium = palette.neutral.medium;
     const main = palette.neutral.main;
-  //  const currentUser = useSelector((state) => state.user._id)
-
+  
     const getUser = async () => {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}/users/${userId}`, {
         method: "GET",
@@ -30,16 +29,6 @@ import {
       const data = await response.json();
       setUser(data);
     };
-
-    // const getCurrentUser = async () => {
-    //   const response = await fetch(`http://localhost:3001/users/currentuser/${currentUser}`, {
-    //     method: "GET",
-    //     headers: { Authorization: `Bearer ${token}` },
-    //   });
-    //   const data = await response.json();
-    //   setUser(data);
-    // };
-  
     
     useEffect(() => {
       getUser();

@@ -4,11 +4,11 @@ import cloudinary from "../cloudinary/cloudinary.js";
 
 /* CREATE */
 // Upload to cloudinary
-async function cloudinaryUpload(file) {
-  const cloudinaryResponse = await cloudinary.uploader.upload(file)
-  const pictureUrl = await cloudinaryResponse.secure_url
-  return pictureUrl
-}
+// async function cloudinaryUpload(file) {
+//   const cloudinaryResponse = await cloudinary.uploader.upload(file)
+//   const pictureUrl = await cloudinaryResponse.secure_url
+//   return pictureUrl
+// }
 // save postdata into mongodb
 async function savePost(data) {
   console.log("from savePost", data);
@@ -40,15 +40,14 @@ export const createPost = async (req, res) => {
     console.log(Object.keys(req.body));
     console.log(req.body);
     let picturePath;
-    image? picturePath = await cloudinaryUpload(image) : picturePath = ""
-      
-      const postData = {
+    image? picturePath = image : picturePath = ""  
+    const postData = {
         userId,
         description,
         picturePath
-      }
-      const posts = await savePost(postData)
-      res.status(201).json(posts);
+    }
+    const posts = await savePost(postData)
+    res.status(201).json(posts);
     
   } catch (err) {
    res.status(409).json({ message: err.message });
@@ -58,8 +57,7 @@ export const createPost = async (req, res) => {
 /* READ */
 export const getFeedPosts = async (req, res) => {
   try {
-    const post = await Post.find();
-    console.log();
+    const post = await Post.find();    
     res.status(200).json(post);
   } catch (err) {
     res.status(404).json({ message: err.message });
@@ -106,12 +104,9 @@ export const likePost = async (req, res) => {
 //DELETE IMAGE FROM CLOUDINARY
 const deleteFromCloudinary = async (url) => {
   const parsedUrl = await url.split('/')[7]
-  console.log(parsedUrl);
   const public_id= parsedUrl.split('.')[0]
-  console.log(public_id)
-  const cloudinaryRes = await cloudinary.uploader.destroy(public_id)
-  console.log(cloudinaryRes)
-}
+  await cloudinary.uploader.destroy(public_id)
+ }
 
 export const deletePost = async (req,res) => {
   try {
@@ -121,10 +116,8 @@ export const deletePost = async (req,res) => {
     const imageUrl = await removedPost.picturePath
     if (imageUrl) {
       deleteFromCloudinary(imageUrl)
-    }
-    
-    const deletedPost= await Post.findByIdAndDelete(id)
-    console.log(deletedPost);
+    }    
+    await Post.findByIdAndDelete(id)
     const post = await Post.find();
     res.status(200).json({post})
   } catch (error) {

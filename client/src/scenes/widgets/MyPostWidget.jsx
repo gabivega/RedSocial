@@ -26,6 +26,7 @@ import {
     const [isImage, setIsImage] = useState(false);
     const [image, setImage] = useState(null);
     const [imageName, setImageName] = useState("")
+    const [pictureUrl, setPictureUrl] = useState("")
     const [post, setPost] = useState("");
     const { palette } = useTheme();
     const { _id } = useSelector((state) => state.user);
@@ -34,12 +35,34 @@ import {
     const mediumMain = palette.neutral.mediumMain;
     const medium = palette.neutral.medium;
   
+    const cloudinaryUpload = async (file)=>{
+      console.log(file);
+      let formData = new FormData();
+      formData.append("file", file)
+      formData.append("upload_preset","jmxyjty3")
+      formData.append("cloud_name","emprenet")
+      for(let obj of formData) {
+        console.log(obj);
+      }
+      const cloudinaryUpload = await fetch ("https://api.cloudinary.com/v1_1/emprenet/image/upload",
+      {method: "POST",
+      body:formData})
+      const cloudinaryResponse = await cloudinaryUpload.json()
+      console.log(cloudinaryResponse)
+      console.log(cloudinaryResponse.secure_url)
+      setPictureUrl(cloudinaryResponse.secure_url)
+      console.log(pictureUrl);
+    }
+
+
     const handlePost = async () => {
+      await cloudinaryUpload(image)        
       const formData = new FormData();
       formData.append("userId", _id);
       formData.append("description", post);
-      if (image) {
-        formData.append("image", image);        
+      if (pictureUrl) {
+        console.log("desde handle post", pictureUrl);
+        formData.append("image", pictureUrl);        
       }
   
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}/posts`, {
@@ -55,15 +78,11 @@ import {
       setPost("");
     };
     
-    const onDrop = useCallback((acceptedFiles) => {
+    const onDrop = (acceptedFiles) => {
       setImageName(acceptedFiles[0].name)
-      const reader = new FileReader()
-      reader.onload = () =>{   
-      setImage(reader.result)
-      }
-      reader.readAsDataURL(acceptedFiles[0])
+      setImage(acceptedFiles[0])
       
-    }, [])
+    }
     
     return (
       <WidgetWrapper>
