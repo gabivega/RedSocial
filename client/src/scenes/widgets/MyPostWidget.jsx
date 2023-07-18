@@ -47,7 +47,7 @@ import {
       {method: "POST",
       body:formData})
       const cloudinaryResponse = await cloudinaryUpload.json()
-      setPictureUrl(cloudinaryResponse.secure_url)
+      await setPictureUrl(cloudinaryResponse.secure_url)
     }
 
 
