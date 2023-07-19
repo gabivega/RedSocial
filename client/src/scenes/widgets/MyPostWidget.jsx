@@ -26,7 +26,7 @@ import {
     const [isImage, setIsImage] = useState(false);
     const [image, setImage] = useState(null);
     const [imageName, setImageName] = useState("")
-    const [pictureUrl, setPictureUrl] = useState("")
+    // const [pictureUrl, setPictureUrl] = useState("")
     const [post, setPost] = useState("");
     const { palette } = useTheme();
     const { _id } = useSelector((state) => state.user);
@@ -35,31 +35,30 @@ import {
     const mediumMain = palette.neutral.mediumMain;
     const medium = palette.neutral.medium;
   
+    
     const cloudinaryUpload = async (file)=>{
       let formData = new FormData();
       formData.append("file", file)
       formData.append("upload_preset","jmxyjty3")
-      formData.append("cloud_name","emprenet")
-      // for(let obj of formData) {
-      //   console.log(obj);
-      // }
+      formData.append("cloud_name","emprenet")  
       const cloudinaryUpload = await fetch ("https://api.cloudinary.com/v1_1/emprenet/image/upload",
       {method: "POST",
       body:formData})
       const cloudinaryResponse = await cloudinaryUpload.json()
-      await setPictureUrl(cloudinaryResponse.secure_url)
+      let pictureUrl = await cloudinaryResponse.secure_url
+      // setPictureUrl(await postPictureUrl)
+      // console.log("dentro del cloudinaryUpload",pictureUrl)
+      return pictureUrl
     }
 
 
     const handlePost = async () => {
-      await cloudinaryUpload(image)        
+      let pictureUrl =await cloudinaryUpload(image)
+      console.log(pictureUrl);       
       const formData = new FormData();
       formData.append("userId", _id);
       formData.append("description", post);
-      if (pictureUrl) {        
-        formData.append("image", pictureUrl);        
-      }
-  
+      formData.append("image", pictureUrl )
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}/posts`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
@@ -69,6 +68,7 @@ import {
       const posts = await response.json();
       dispatch(setPosts({ posts }));
       setImage(null)
+      pictureUrl = ""
       setIsImage(null);
       setPost("");
     };

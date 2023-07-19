@@ -111,7 +111,6 @@ const Form = () => {
     const [imageName, setImageName] = useState(null)
 
     const cloudinaryUpload = async (file)=>{
-      console.log(file);
       let formData = new FormData();
       formData.append("file", file)
       formData.append("upload_preset","jmxyjty3")
@@ -123,8 +122,6 @@ const Form = () => {
       {method: "POST",
       body:formData})
       const cloudinaryResponse = await cloudinaryUpload.json()
-      console.log(cloudinaryResponse)
-      console.log(cloudinaryResponse.secure_url)
       setImage(cloudinaryResponse.secure_url)
     }
     return (
