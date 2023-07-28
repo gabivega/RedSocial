@@ -16,6 +16,7 @@ router.get("/:id/friends", verifyToken, getUserFriends);
 router.get("/currentuser/:id",verifyToken, getCurrentUser)
 
 // ===== UPDATE =====
+// router.patch("/:id/:friendId", addRemoveFriend);
 router.patch("/:id/:friendId", verifyToken, addRemoveFriend);
 
 export default router;

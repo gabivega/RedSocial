@@ -49,6 +49,7 @@ export const getUserFriends = async (req, res) => {
 // ===== UPDATE =====
 export const addRemoveFriend = async (req, res) => {
     try {
+        console.log("addRemoveFriend:", req);
         const  { id, friendId } = req.params;
         const user = await User.findById(id);
         const friend = await User.findById(friendId);
@@ -70,8 +71,7 @@ export const addRemoveFriend = async (req, res) => {
             ({ _id, firstName, lastName, occupation, location, picturePath }) => {
                 return { _id, firstName, lastName, occupation, location, picturePath };
             }
-        );
-
+        );          
     res.status(200).json(formattedFriends);
     } catch (err) {
         res.status(404).json({ message: err.message })
