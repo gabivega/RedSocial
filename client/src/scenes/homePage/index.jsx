@@ -22,13 +22,13 @@ import Chatroom from "scenes/widgets/ChatRoom";
         display={isNonMobileScreens? "flex" : "block"}
         gap="0.5rem"
         justifyContent="space-between">
-        
+        {isNonMobileScreens && 
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
             <CurrentUserWidget 
             userId={_id} 
             picturePath={picturePath} />
             <FriendListWidget userId={_id} />
-        </Box>
+        </Box> }
         <Box flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}>
             <MyPostWidget picturePath={picturePath} />

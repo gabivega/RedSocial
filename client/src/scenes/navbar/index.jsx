@@ -25,12 +25,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
+import UserImage from "components/UserImage";
+
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const picturePath = user.picturePath
+  const id = user._id
   const isNonMobileScreens = useMediaQuery("(min-width: 800px)");
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
@@ -71,7 +75,7 @@ const Navbar = () => {
               <Search />
             </IconButton>
           </FlexBetween>
-        )}
+        )}        
       </FlexBetween>
 
       {/* DESKTOP NAV */}
@@ -114,11 +118,29 @@ const Navbar = () => {
           </FormControl>
         </FlexBetween>
       ) : (
+        <Box
+        display="flex"
+        flexDirection="row"
+        >
+          <Box 
+            onClick={() => navigate(`/profile/${id}`)}
+            sx={{
+              mr:"1rem",
+              "&:hover": {
+                color: primaryLight,
+                cursor: "pointer",
+              },
+            }}>
+              <UserImage image={picturePath} size="48px"
+              
+                />
+          </Box>
         <IconButton
           onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
         >
           <Menu />
         </IconButton>
+        </Box>
       )}
 
       {/* MOBILE NAV */}
