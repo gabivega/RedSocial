@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route, HashRouter } from "react-router-dom";
 import HomePage from "scenes/homePage";
 import LoginPage from "scenes/loginPage";
 import ProfilePage from "scenes/profilePage";
@@ -16,7 +16,7 @@ import { themeSettings } from "./theme";
   
   return (
     <div className="app">
-  <BrowserRouter>
+  <HashRouter>
   <ThemeProvider theme={theme}>
     <CssBaseline />
     <Routes>
@@ -25,7 +25,7 @@ import { themeSettings } from "./theme";
       <Route path="/profile/:userId" element= {isAuth ? <ProfilePage /> : <Navigate to ="/" />} />
     </Routes>
   </ThemeProvider>
-  </BrowserRouter>
+  </HashRouter>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   mode: "dark",
-  user: "noAuthUser",
+  user: null,
   token: null,
   posts: [],
   chatMsg: ""
@@ -48,6 +48,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, setChatMsg } =
+export const { setMode, setLogin, setLogout, setFriends, setPosts, setPost, } =
   authSlice.actions;
 export default authSlice.reducer;
