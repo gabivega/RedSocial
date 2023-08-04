@@ -1,16 +1,12 @@
-import cloudinary from "cloudinary"
+import cloudinary from "cloudinary";
 import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 
-cloudinary.config(
-    {
-        cloud_name: "emprenet",
-        api_key: process.env.CLOUDINARY_API_KEY,
-        api_secret: process.env.CLOUDINARY_SECRET_KEY
-}
-)
+cloudinary.config({
+  cloud_name: "emprenet",
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET_KEY,
+});
 
-
-
-export default cloudinary 
+export default cloudinary;
