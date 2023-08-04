@@ -27,14 +27,13 @@ import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 
-
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
-  const picturePath = user.picturePath
-  const id = user._id
+  const picturePath = user.picturePath;
+  const id = user._id;
   const isNonMobileScreens = useMediaQuery("(min-width: 800px)");
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
@@ -43,8 +42,8 @@ const Navbar = () => {
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
 
- //const fullName = `${user.firstName} ${user.lastName}`;
- const fullName = `${user.firstName} ${user.lastName}`;
+  //const fullName = `${user.firstName} ${user.lastName}`;
+  const fullName = `${user.firstName} ${user.lastName}`;
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -75,7 +74,7 @@ const Navbar = () => {
               <Search />
             </IconButton>
           </FlexBetween>
-        )}        
+        )}
       </FlexBetween>
 
       {/* DESKTOP NAV */}
@@ -84,12 +83,12 @@ const Navbar = () => {
         <FlexBetween gap="2rem">
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
-             <LightMode sx={{ color: dark, fontSize: "25px" }}/>
+              <LightMode sx={{ color: dark, fontSize: "25px" }} />
             ) : (
-               <DarkMode sx={{ fontSize: "25px" }} />
+              <DarkMode sx={{ fontSize: "25px" }} />
             )}
           </IconButton>
-          <Message sx={ { fontSize: "25px" }} />
+          <Message sx={{ fontSize: "25px" }} />
           <Notifications sx={{ fontSize: "25px" }} />
           <AccountBalanceWalletOutlined sx={{ fontSize: "25px" }} />
           <FormControl variant="standard" value={fullName}>
@@ -118,28 +117,24 @@ const Navbar = () => {
           </FormControl>
         </FlexBetween>
       ) : (
-        <Box
-        display="flex"
-        flexDirection="row"
-        >
-          <Box 
+        <Box display="flex" flexDirection="row">
+          <Box
             onClick={() => navigate(`/profile/${id}`)}
             sx={{
-              mr:"1rem",
+              mr: "1rem",
               "&:hover": {
                 color: primaryLight,
                 cursor: "pointer",
               },
-            }}>
-              <UserImage image={picturePath} size="48px"
-              
-                />
+            }}
+          >
+            <UserImage image={picturePath} size="48px" />
           </Box>
-        <IconButton
-          onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
-        >
-          <Menu />
-        </IconButton>
+          <IconButton
+            onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
+          >
+            <Menu />
+          </IconButton>
         </Box>
       )}
 

@@ -8,8 +8,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
 
- const feedPosts = [...posts].reverse()
-
+  const feedPosts = [...posts].reverse();
 
   const getPosts = async () => {
     const response = await fetch(`${process.env.REACT_APP_BASE_URL}/posts`, {
@@ -26,7 +25,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
-      }
+      },
     );
     const data = await response.json();
     dispatch(setPosts({ posts: data }));
@@ -39,8 +38,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
       getPosts();
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    
 
   return (
     <>
@@ -69,7 +66,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             likes={likes}
             comments={comments}
           />
-        )
+        ),
       )}
     </>
   );
